@@ -24,8 +24,16 @@ def select_top(cand, k):
     return cand
 
 
+def require_locked(cfg):
+    """FR-DAT-11: tag lock-v1 phải có trước SEARCH_RUN tool_select đầu tiên."""
+    if not cfg.get("locked_on"):
+        raise SystemExit("decisions.yaml chưa khóa (locked_on trống) — làm Bước 4.4 (điền locked_on, "
+                         "gắn tag lock-v1) trước khi chạy tool_select (FR-DAT-11)")
+
+
 def main():
     cfg = load_decisions()
+    require_locked(cfg)
     if not (CONFIGS / "main_model.yaml").exists():
         raise SystemExit("Chưa có configs/main_model.yaml — làm Bước 5.3 (chọn model chính) và commit trước")
     main_cfg = load_yaml("main_model.yaml")

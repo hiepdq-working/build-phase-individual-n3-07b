@@ -2,7 +2,8 @@ import pandas as pd
 import pytest
 
 from src.data.make_splits import pick_rare
-from src.select.tool_select import select_top
+from src.select import tool_select
+from src.select.tool_select import require_locked, select_top
 from src.train.datasets import parse_run_id
 
 
@@ -31,3 +32,21 @@ def test_pick_rare_fallback():
         {"timeofday": ["night"], "weather": None}]}
     rare, lvl = pick_rare(val, rs)
     assert lvl == 1 and set(rare.image_id) == {"a", "b"}
+
+
+@pytest.mark.parametrize("locked_on", [None, ""])
+def test_tool_select_refuses_when_not_locked(monkeypatch, locked_on):
+    """FR-DAT-11: chưa có locked_on thì dừng ngay, trước khi đọc main_model.yaml hay chỉ mục."""
+    monkeypatch.setattr(tool_select, "load_decisions", lambda: {"locked_on": locked_on})
+
+    def boom(*a, **k):
+        raise AssertionError("không được chạm tới chỉ mục khi chưa khóa")
+
+    monkeypatch.setattr(tool_select, "SearchIndex", boom)
+    monkeypatch.setattr(tool_select, "load_yaml", boom)
+    with pytest.raises(SystemExit, match="locked_on"):
+        tool_select.main()
+
+
+def test_require_locked_passes_with_date():
+    require_locked({"locked_on": "2026-10-18"})
