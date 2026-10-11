@@ -13,6 +13,9 @@ runs/
 *.parquet
 !report/figures/*.png
 
+# Tài liệu nguồn (checklist, SRD, repo cũ…) — chỉ để tham khảo, không commit
+_inputs/
+
 # Python
 __pycache__/
 *.pyc
