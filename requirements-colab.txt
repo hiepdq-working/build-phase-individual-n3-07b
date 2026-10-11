@@ -1,0 +1,10 @@
+# Môi trường Colab (Bước 4.2, NFR-15). Chạy MỘT lần trên Colab:
+#   !pip -q install ultralytics open_clip_torch faiss-cpu
+#   !pip freeze | grep -E "^(ultralytics|open_clip_torch|faiss-cpu|torch)=="
+# rồi THAY 4 dòng dưới bằng 4 dòng in ra (dạng ultralytics==8.x.y) và commit trước pilot.
+# train_run.py dừng nếu phiên bản ultralytics khác bản pin (FR-TRN-06).
+ultralytics
+open_clip_torch
+faiss-cpu
+pyarrow
+pyyaml

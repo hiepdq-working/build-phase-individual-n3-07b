@@ -1,0 +1,11 @@
+run_id,arm,seed,status,colab_account,drive_dir,sessions,planned,started_at,finished_at,note
+base,base,0,todo,acc1,runs/base,0,W1,,,
+random_s0,random,0,todo,acc1,runs/random_s0,0,W2 T3,,,
+meta_s0,meta,0,todo,acc1,runs/meta_s0,0,W2 T3-T4,,,
+tool_s0,tool,0,todo,acc1,runs/tool_s0,0,W2 T4,,,
+random_s1,random,1,todo,acc1,runs/random_s1,0,W2 T5,,,
+meta_s1,meta,1,todo,acc1,runs/meta_s1,0,W2 T6,,,
+tool_s1,tool,1,todo,acc1,runs/tool_s1,0,W2 T7,,,
+random_s2,random,2,todo,acc1,runs/random_s2,0,W2 CN,,,
+meta_s2,meta,2,todo,acc1,runs/meta_s2,0,W3 T2,,,
+tool_s2,tool,2,todo,acc1,runs/tool_s2,0,W3 T3,,,

@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # cần tag lock-v1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Lint
+        run: ruff check .
+      - name: Tests
+        run: pytest -q
+      - name: Không có ảnh / embedding / weights trong repo (NFR-39)
+        run: |
+          if git ls-files | grep -Ei '\.(jpg|jpeg|npy|faiss|pt|parquet|zip)$|^(data|index|runs)/'; then
+            echo "::error::Phát hiện file dữ liệu bị commit (BDD100K research-only, không phân phối lại)"; exit 1
+          fi
+      - name: decisions.yaml không đổi sau lock-v1 (NFR-01)
+        run: |
+          if git rev-parse -q --verify refs/tags/lock-v1 >/dev/null; then
+            git diff --exit-code lock-v1 -- configs/decisions.yaml && echo "decisions.yaml khớp lock-v1"
+          else
+            echo "Chưa có tag lock-v1 — bỏ qua"
+          fi

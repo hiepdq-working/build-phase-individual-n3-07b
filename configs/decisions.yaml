@@ -1,0 +1,89 @@
+# Bảng quyết định khóa trước — N3-07B (làm một mình)
+#
+# Mọi con số của thí nghiệm nằm ở đây; code chỉ đọc từ file này (NFR-14, NFR-37).
+# Các dòng ghi OI-xx là lựa chọn đề xuất cho vấn đề mở của SRD (xem docs/open_issues.md).
+# Được sửa TRƯỚC khi gắn tag lock-v1 (Bước 4). Sau đó KHÔNG sửa (NFR-01):
+#   git diff lock-v1 -- configs/decisions.yaml   phải rỗng tới hết dự án.
+
+locked_on: null            # điền ngày khi gắn tag lock-v1 (Bước 4.4), ví dụ "2026-10-18"
+
+seeds:
+  split: 20261011
+  arm_random: 1
+  arm_meta: 2
+  judging_shuffle: 3
+  timing_browse: 4
+  train: [0, 1, 2]
+
+sizes:
+  base: 5000
+  pool: 40000
+  dev: 1000                # ảnh train ngoài base/pool, chỉ để điền khóa val của Ultralytics (OI-02)
+  val2k: 2000
+  arm_k: 500
+  tool_candidates: 1500
+  min_hard_in_pool: 1000   # A-02: pool cần ≥ 1.000 ảnh night ∧ (rainy ∨ snowy)
+
+class_map:                 # tên lớp BDD det_20 -> id YOLO
+  pedestrian: 0
+  rider: 1
+  car: 2
+  truck: 3
+  bus: 4
+  bicycle: 5
+  motorcycle: 6
+label_aliases: {person: pedestrian, bike: bicycle, motor: motorcycle}
+keep_all_classes_in_boxes: true   # OI-31: boxes.parquet giữ cả 10 lớp, lớp ngoài class_map có yolo_class = -1
+missing_label_json: exclude       # OI-22: ảnh không có trong JSON bị loại khỏi mọi split
+val2k_may_overlap_rare: true      # OI-15: được trùng, số ảnh trùng được báo cáo
+
+rare_slice:
+  min_pedestrians: 1
+  min_images: 150
+  levels:                  # thử lần lượt, dừng ở mức đầu tiên đủ min_images
+    - {timeofday: [night], weather: [rainy, snowy]}
+    - {timeofday: [night], weather: [rainy, snowy, foggy]}
+    - {timeofday: [night], weather: null}
+
+clip:
+  models:
+    - {name: ViT-B-32, pretrained: laion2b_s34b_b79k}
+    - {name: ViT-B-16-SigLIP-384, pretrained: webli}   # model thứ hai, làm nếu kịp (W2)
+  preprocess: pad_square   # OI-08: đệm thành hình vuông, không cắt mất hai bên ảnh
+  tiling: {cols: 3, rows: 2, overlap: 0.2}
+  tool_select_tiling: whole_tiles   # OI-13
+  main_model_rule: "P@50 trung bình của 2 tiling cao hơn; hòa hoặc thiếu chỉ mục thì chọn ViT-B-32"   # OI-12
+
+uncertainty:
+  conf_min: 0.2
+  conf_max: 0.5
+  empty_value: 0.0         # OI-01: ảnh không có box nào ≥ 0.2 thì uncertainty = 0
+  imgsz: 640
+  iou: 0.7
+  tie_break: [clip_score_desc, image_id_asc]   # OI-11
+
+train:
+  model: yolov8s.pt
+  imgsz: 640
+  epochs: null             # chốt sau pilot ở Bước 4.3 (E = floor(90 / phút_mỗi_epoch), bội số của 5, ≥ 10)
+  batch: 16
+  workers: 2
+  optimizer: SGD
+  lr0: 0.01
+  val_during_train: false
+  checkpoint_rule: last    # OI-02: chấm bằng last.pt, không early stopping
+
+eval:
+  conf: 0.001
+  iou: 0.6
+  primary: {metric: AP50, class: pedestrian, set: rare_val}
+  secondary: {metric: mAP50, set: val2k}
+
+timing:
+  minutes: 15
+  page_size: 30
+
+conclusion_rule: >        # OI-14, khóa trước khi chấm 9 run (NFR-12)
+  "Tool tốt hơn random" nếu mean(tool) - mean(random) > max(std_tool, std_random)
+  VÀ tool > random ở cả 3 cặp cùng seed. "Có xu hướng" nếu chỉ đạt 2/3 cặp.
+  Ngược lại: "chưa có bằng chứng", báo cáo nguyên trạng và so với arm_meta.

@@ -1,0 +1,53 @@
+# Bộ truy vấn — commit file này TRƯỚC khi chạy đo (OI-24, NFR-04).
+# Sau khi đã thấy kết quả: không sửa câu, không thêm/bớt câu.
+#
+#   tool:       3–5 câu mô tả lát cắt hiếm, dùng để chọn arm_tool (Bước 5). Không xem kết quả trên val.
+#   eval_auto:  20 câu, đáp án tính tự động từ metadata/nhãn bằng src/eval/gt_rules.py (con số 1).
+#   eval_human: 5 câu không có luật, chấm mù bằng tay (Bước 8). definition = định nghĩa cho người chấm.
+#
+# 7 câu về vật nhỏ hoặc cảnh tối (A01, A15, A16, A17, A18, A19, A20) — đủ mức ≥ 6 của Kế hoạch.
+
+tool:
+  - a pedestrian crossing a dark street at night in the rain
+  - a person walking on a wet road at night
+  - a pedestrian on a snowy street at night
+  - a person holding an umbrella on a city street at night
+
+eval_auto:
+  - {id: A01, text: a city street at night, rule: night}
+  - {id: A02, text: a road on a rainy day, rule: rainy}
+  - {id: A03, text: a snowy road, rule: snowy}
+  - {id: A04, text: a foggy road with low visibility, rule: foggy}
+  - {id: A05, text: driving inside a tunnel, rule: tunnel}
+  - {id: A06, text: a highway, rule: highway}
+  - {id: A07, text: a quiet residential street, rule: residential}
+  - {id: A08, text: a parking lot, rule: parking_lot}
+  - {id: A09, text: a road at dawn or dusk, rule: dawn_dusk}
+  - {id: A10, text: an overcast cloudy day, rule: overcast}
+  - {id: A11, text: a bus on the road, rule: bus}
+  - {id: A12, text: several large trucks on the road, rule: trucks3}
+  - {id: A13, text: heavy traffic with many cars, rule: cars15}
+  - {id: A14, text: an empty road with no vehicles, rule: no_vehicle}
+  - {id: A15, text: a person far away on the road, rule: small_ped}
+  - {id: A16, text: many pedestrians crossing the street, rule: peds5}
+  - {id: A17, text: a person riding a bicycle, rule: cyclist}
+  - {id: A18, text: a motorcycle on the street, rule: motorcycle}
+  - {id: A19, text: a pedestrian at night, rule: night_ped}
+  - {id: A20, text: a rainy street at night, rule: night_rain}
+
+eval_human:
+  - id: H01
+    text: a road construction zone with cones
+    definition: Thấy công trường trên đường — cọc tiêu, hàng rào chắn hoặc biển công trường chiếm một phần làn đường
+  - id: H02
+    text: strong headlight glare at night
+    definition: Đèn pha xe đối diện gây lóa mạnh, che khuất một phần ảnh
+  - id: H03
+    text: a pedestrian holding an umbrella
+    definition: Có ít nhất một người đang cầm/che ô nhìn thấy được; ô che nắng của quán không có người cầm không tính
+  - id: H04
+    text: a road covered in snow at night
+    definition: Ảnh ban đêm và mặt đường hoặc lề đường có tuyết phủ nhìn thấy rõ
+  - id: H05
+    text: a person walking a dog
+    definition: Có người đi bộ dắt chó (thấy cả người và chó); chó đi một mình không tính

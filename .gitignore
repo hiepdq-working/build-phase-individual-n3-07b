@@ -1,0 +1,30 @@
+# Dữ liệu BDD100K, chỉ mục, checkpoint: research-only, KHÔNG commit (NFR-39)
+.venv/
+data/
+index/
+runs/
+*.jpg
+*.jpeg
+*.png
+*.zip
+*.npy
+*.faiss
+*.pt
+*.parquet
+!report/figures/*.png
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Hệ điều hành / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Video demo: để trên Drive, chỉ chia sẻ với người chấm
+*.mp4
+*.mov

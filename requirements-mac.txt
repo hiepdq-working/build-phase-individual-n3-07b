@@ -1,0 +1,16 @@
+# Môi trường Mac (Bước 0.1). Python 3.11.
+# Sau khi cài xong và chạy được:  pip freeze > requirements-mac.lock.txt  rồi commit file lock (NFR-15).
+torch
+torchvision
+open_clip_torch
+faiss-cpu
+ultralytics
+streamlit>=1.50
+pandas
+pyarrow
+pyyaml
+matplotlib
+tqdm
+pillow
+pytest
+ruff

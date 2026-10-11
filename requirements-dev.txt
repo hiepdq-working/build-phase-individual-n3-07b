@@ -1,0 +1,9 @@
+# Đủ cho pytest + ruff trong CI (không cần torch / CLIP / dữ liệu)
+numpy
+pandas
+pyarrow
+pyyaml
+pillow
+tqdm
+pytest
+ruff
