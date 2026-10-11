@@ -28,7 +28,7 @@ Tích ô khi phần **Kiểm tra** của bước đã qua. Ghi ngày thật vào
 ### Bước 0 — Môi trường và dữ liệu
 - [ ] Python 3.11, VS Code (Python + Jupyter), git config
 - [ ] `.venv`, `pip install -r requirements-mac.txt`, `requirements-mac.lock.txt`; torch in `True` cho MPS
-- [ ] Repo trên GitHub (`n3-07b-solo`), push
+- [ ] Repo trên GitHub (`build-phase-individual-n3-07b`), push
 - [ ] `bash scripts/download_bdd.sh`: 70.000 / 10.000 ảnh, `docs/bdd100k.sha256`
 - [ ] `docs/data_sources.md` điền nguồn, ngày tải, dung lượng, SHA-256, số ảnh
 - [ ] `notebooks/00_setup_drive.ipynb`: hash Drive = hash Mac

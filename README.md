@@ -38,7 +38,7 @@ G11    chấm last.pt: AP50 pedestrian (rare_val), mAP50 (val2k) ─► mean ± 
 ## Cấu trúc repo
 
 ```
-n3-07b/
+build-phase-individual-n3-07b/
 ├── configs/
 │   ├── decisions.yaml        # bảng quyết định khóa trước (tag lock-v1) — code chỉ đọc số từ đây
 │   ├── queries.yaml          # 4 prompt tool, 20 eval_auto, 5 eval_human
@@ -68,7 +68,7 @@ n3-07b/
 ### Bước 0 — Môi trường (Mac, Python 3.11)
 
 ```bash
-git clone https://github.com/<user>/n3-07b-solo.git ~/n3-07b && cd ~/n3-07b
+git clone https://github.com/<user>/build-phase-individual-n3-07b.git && cd build-phase-individual-n3-07b
 python3.11 -m venv .venv && source .venv/bin/activate
 pip install --upgrade pip && pip install -r requirements-mac.txt
 pip freeze > requirements-mac.lock.txt
